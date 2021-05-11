@@ -1,0 +1,86 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+    margin: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background: linear-gradient(45deg, darkblue,skyblue, darkblue);
+}
+
+.app-name {
+    padding: 10px;
+    height: 15vh;
+    text-align: center;
+    font: bold;
+    font-weight: 900;
+    font-size: 80px;
+    color: black;
+    transition: all 0.3s;
+}
+
+.app-name:hover {
+    font-size: 85px;
+    border-bottom: 10px solid black;
+}
+
+.sketch {
+    width: 90%;
+    height: 80vh;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tools {
+    width: 95%;
+    height: 5%;
+    text-align: center;
+    background-color: black;
+}
+
+.tools div{
+    font-size: 20px;
+    color: white;
+    display: inline;
+}
+
+.tools div:nth-child(2),:nth-child(3){
+    margin-left: 1%;
+}
+
+button {
+    color: transparent;
+    text-shadow: 0 0 0 black;
+    font-size: 20px;
+    height: 100%;
+    cursor: pointer;
+}
+
+button:hover {
+    text-shadow: 0 0 0 white;
+    background-color: gray;
+}
+
+input,select {
+    height: 100%;
+}
+
+canvas {
+    width: 95%;
+    height: 95%;
+    background-color: white;
+    border: solid black 5px;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Collaborative White Board</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="app-name">
+            CANVAS
+        </div> 
+        <div class="sketch" id="sketch">
+            <div class="tools">
+                <div class="color-picker-container">
+                    <label for="color">Select Color:&nbsp;</label>
+                    <input type="color" id="colorInput" value="#000000" onchange="changecolor(this)">
+                </div>
+                <div class="brush-picker-container">
+                    <label for="brush" >Select weight:&nbsp;</label>
+                    <select name="brush" value="5" id="weightInput" oninput="changeweight(this)">
+                        <option value="5">1</option>
+                        <option value="10">2</option>
+                        <option value="15">3</option>
+                        <option value="20">4</option>
+                        <option value="25">5</option>
+                        <option value="30">6</option>
+                    </select>
+                </div>
+                <div class="clear-button-container">
+                    <button id="clearbtn" onclick="clearcanvas()">Empty Board</button>
+                </div>
+            </div>
+            
+            <canvas id="paint" class="paint"></canvas>
+        </div>
+    </div>
+
+</body>
+<script src="script.js"></script>
+</html>
