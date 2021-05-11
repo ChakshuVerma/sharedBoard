@@ -5,6 +5,8 @@ const io = require('socket.io')(http)
 
 app.use(express.static('public'))
 
+const port = process.env.PORT || 8000;
+
 app.get('/',(req,res) => {
     res.sendFile(__dirname + '/public/')
 })
@@ -39,4 +41,4 @@ app.use((req,res,next) => {
 
 })
 
-http.listen(5000, () => console.log("Server Started"))
+http.listen(port, () => console.log("Server Started"))
