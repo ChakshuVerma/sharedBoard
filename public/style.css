@@ -7,6 +7,7 @@ body {
     margin: 0;
     top: 0;
     bottom: 0;
+    background: linear-gradient(45deg, darkblue,skyblue, darkblue);
 }
 
 .container {
@@ -16,12 +17,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    background: linear-gradient(45deg, darkblue,skyblue, darkblue);
 }
 
 .app-name {
     padding: 10px;
-    height: 15vh;
     text-align: center;
     font: bold;
     font-weight: 900;
@@ -30,14 +29,9 @@ body {
     transition: all 0.3s;
 }
 
-.app-name:hover {
-    font-size: 85px;
-    border-bottom: 10px solid black;
-}
-
 .sketch {
     width: 90%;
-    height: 80vh;
+    height: 80%;
     padding-bottom: 15px;
     display: flex;
     flex-direction: column;
@@ -46,19 +40,21 @@ body {
 
 .tools {
     width: 95%;
+    min-height: 30px;
     height: 5%;
     text-align: center;
     background-color: black;
 }
 
-.tools div{
+.tools > div{
     font-size: 20px;
+    height: 100%;
     color: white;
     display: inline;
 }
 
 .tools div:nth-child(2),:nth-child(3){
-    margin-left: 1%;
+    margin-left: 4%;
 }
 
 button {
@@ -74,8 +70,13 @@ button:hover {
     background-color: gray;
 }
 
-input,select {
-    height: 100%;
+.app-name:hover {
+    color: white;
+}
+
+input{
+    height: 80%;
+    cursor: pointer;
 }
 
 canvas {
@@ -83,4 +84,11 @@ canvas {
     height: 95%;
     background-color: white;
     border: solid black 5px;
+    cursor: pointer;
+}
+
+@media all and (max-width: 600px) {
+    .tools div, button {
+        font-size: 15px;
+    }
 }
