@@ -39,11 +39,16 @@ body {
 }
 
 .tools {
+    visibility: hidden;
     width: 95%;
     min-height: 30px;
     height: 5%;
     text-align: center;
     background-color: black;
+}
+
+.sketch:hover .tools{
+    visibility: visible;
 }
 
 .tools > div{

@@ -41,4 +41,4 @@ app.use((req,res,next) => {
 
 })
 
-http.listen(port, () => console.log("Server Started"))
+http.listen(port, () => console.log("Server Started on: " + port))
