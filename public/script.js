@@ -37,7 +37,7 @@ function start(event) {
 }
 
 
-// Function To Draw
+// Function To Draw  
 function draw(event) {
     if(isDrawing) {
         ctx.lineTo(event.clientX - canvas.offsetLeft,event.clientY - canvas.offsetTop);
