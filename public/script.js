@@ -1,53 +1,61 @@
+                                                /* GLOBAL VARIABLES
+======================================================================================================================*/
 let socket = io();
-let canvas, ctx, color, weight, isDrawing, timeout;
+let canvas, ctx, color = '#000000', weight = '5', isDrawing, timeout;
 
-// This gives the Initial State To Canvas
+
+                                                /* INITIAL PROCESS
+======================================================================================================================*/
 socket.emit('login')
 
-setupCanvas();
-
-// Function To Set Up Canvas Initially
-function setupCanvas() {
-    canvas = document.getElementById('paint');
-    var canvas_style = getComputedStyle(canvas);
-    canvas.width = parseInt(canvas_style.getPropertyValue('width'));
-    canvas.height = parseInt(canvas_style.getPropertyValue('height'));
-    ctx = canvas.getContext('2d');
-    weight = '5';
-    color = '#000000'
-}
+canvas = document.getElementById('paint');
+ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth*0.9;
+canvas.height = window.innerHeight*0.8;
+resizeCanvas();
 
 
-// Canvas Event Listeners
+                                                /* EVENT LISTENERS
+======================================================================================================================*/
+
 canvas.addEventListener('touchstart', start, false);
 canvas.addEventListener('touchmove', draw, false);
+canvas.addEventListener('touchend', stop, false);
+
 canvas.addEventListener('mousedown', start, false);
 canvas.addEventListener('mousemove', draw, false);
-canvas.addEventListener('touchend', stop, false);
 canvas.addEventListener('mouseup', stop, false);
 canvas.addEventListener('mouseout', stop, false);
 
+window.addEventListener('resize', resizeCanvas, false);
 
-// Function To Start Drawing
+
+                                                /* DRAWING FUNCTIONS
+======================================================================================================================*/
+
 function start(event) {
-    isDrawing = true;
-    ctx.beginPath();
-    ctx.moveTo(event.clientX - canvas.offsetLeft,event.clientY - canvas.offsetTop);
+
     event.preventDefault();
+    const mousePos = getMosuePositionOnCanvas(event);
+    ctx.beginPath();
+    ctx.moveTo(mousePos.x, mousePos.y);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = weight;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.fill();
+
+    isDrawing = true;
 }
 
-
-// Function To Draw  
 function draw(event) {
+    event.preventDefault();
     if(isDrawing) {
-        ctx.lineTo(event.clientX - canvas.offsetLeft,event.clientY - canvas.offsetTop);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = weight;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round'
+        const mousePos = getMosuePositionOnCanvas(event);
+
+        ctx.lineTo(mousePos.x, mousePos.y);
         ctx.stroke();
     }
-    event.preventDefault();
 
     if(timeout != undefined)
         clearTimeout(timeout)
@@ -55,51 +63,67 @@ function draw(event) {
     timeout = setTimeout( () => {
         var base64ImageData = canvas.toDataURL("image/png")
         socket.emit('canvas-data', base64ImageData)
-    },400)
+    },600)
 }
 
-
-// Function To Stop Drawing
 function stop(event) {
-    if(isDrawing) {
+    event.preventDefault();
+  
+    if (isDrawing) {
         ctx.stroke();
         ctx.closePath();
-        isDrawing = false;
     }
-    event.preventDefault();
+  
+    isDrawing = false;
 }
 
 
-// Function To Change Color Of Brush
-function changecolor(c) {
+                                                    /* HELPER-FUNCTIONS
+ =========================================================================================================================*/
+
+ function changecolor(c) {
     color = c.value;
     ctx.strokeStyle = color;
- }
+}
 
-
-// Function To Change Weight Of Brush
 function changeweight(c) {
     weight = c.value;
     ctx.lineWidth = weight;
 }
 
-
-// Function To Clear Canvas
 function clearcanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     socket.emit('clear-canvas')
 }
 
-socket.on('initial-canvas', (data) => {
-    var image = new Image()
-    var canvas = document.querySelector('#paint')
-    ctx = canvas.getContext('2d');
+function resizeCanvas() {
+    canvas.style.width = window.innerWidth*0.9;
+    canvas.style.height = window.innerHeight*0.8;
+    socket.emit('canvas-data-to-all')
+}
 
-    image.onload = () => {
-        ctx.drawImage(image, 0, 0)
-    }
-    image.src = data
-})
+ function getMosuePositionOnCanvas(event) {
+    const clientX = event.clientX || event.touches[0].clientX;
+    const clientY = event.clientY || event.touches[0].clientY;
+    const { offsetLeft, offsetTop } = event.target;
+    const canvasX = clientX - offsetLeft;
+    const canvasY = clientY - offsetTop;
+  
+    return { x: canvasX, y: canvasY };
+  }
+
+                                            /* WEB-SOCKETS
+ ======================================================================================================================*/
+// socket.on('initial-canvas', (data) => {
+//     var image = new Image()
+//     var canvas = document.querySelector('#paint')
+//     ctx = canvas.getContext('2d');
+
+//     image.onload = () => {
+//         ctx.drawImage(image, 0, 0)
+//     }
+//     image.src = data
+// })
 
 socket.on('clear-canvas', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)

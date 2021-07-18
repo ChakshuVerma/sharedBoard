@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
+const path  = require('path')
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 
-app.use(express.static('public'))
+
+app.use(express.static(path.join(__dirname ,'public')));
 
 const port = process.env.PORT || 8000;
 
@@ -17,15 +19,18 @@ let changesMade = false
 io.on('connection', (socket) => {
 
     socket.on('login', () => {
-        console.log('New Socket: ' + socket.id)
         if(changesMade === true)
-            io.to(socket.id).emit('initial-canvas', currctx)
+            io.to(socket.id).emit('canvas-data', currctx)
     })
 
     socket.on('canvas-data', (data) => {
         currctx = data;
         changesMade = true
         socket.broadcast.emit('canvas-data', data)
+    })
+    socket.on('canvas-data-to-all', () => {
+        changesMade = true
+        io.emit('canvas-data', currctx)
     })
 
     socket.on('clear-canvas', () => {
@@ -34,11 +39,15 @@ io.on('connection', (socket) => {
     })
 })
 
-app.use((req,res,next) => {
-    res.status(404).send(`<h1>404<br>
-                Page Not Found</h1><br>
-                <h2>Try http://localhost:5000 To Go To Homepage</h2>`)
+// So that page renders again when we press the backbutton
+app.use(function(req, res, next) {
+    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    next();
+});
+  
 
+app.use('*', (req,res) => {
+    res.sendFile(__dirname + '/public/404.html')
 })
 
 http.listen(port, () => console.log("Server Started on: " + port))
