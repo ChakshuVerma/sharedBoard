@@ -22,17 +22,15 @@ io.on('connection', (socket) => {
         if(changesMade === true)
             io.to(socket.id).emit('canvas-data', currctx)
     })
-
+    socket.on('resize-data', () => {
+        if(changesMade === true)
+            io.to(socket.id).emit('resized-data', currctx)
+    })
     socket.on('canvas-data', (data) => {
         currctx = data;
         changesMade = true
         socket.broadcast.emit('canvas-data', data)
     })
-    socket.on('canvas-data-to-all', () => {
-        changesMade = true
-        io.emit('canvas-data', currctx)
-    })
-
     socket.on('clear-canvas', () => {
         changesMade = false
         socket.broadcast.emit('clear-canvas')

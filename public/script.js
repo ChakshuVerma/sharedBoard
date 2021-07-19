@@ -1,19 +1,21 @@
                                                 /* GLOBAL VARIABLES
 ======================================================================================================================*/
 let socket = io();
-let canvas, ctx, color = '#000000', weight = '5', isDrawing, timeout;
+var color = '#000000', weight = '5', isDrawing, timeout;
+var resizedImage = new Image();
+var tempWidth = window.innerWidth*0.9, 
+    tempHeight = tempWidth*0.5;
 
 
                                                 /* INITIAL PROCESS
 ======================================================================================================================*/
 socket.emit('login')
 
-canvas = document.getElementById('paint');
-ctx = canvas.getContext('2d');
+const canvas = document.getElementById('paint');
+var ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth*0.9;
-canvas.height = window.innerHeight*0.8;
-resizeCanvas();
-
+var tempWidth = canvas.width;
+canvas.height = tempWidth*0.5;
 
                                                 /* EVENT LISTENERS
 ======================================================================================================================*/
@@ -97,9 +99,18 @@ function clearcanvas() {
 }
 
 function resizeCanvas() {
-    canvas.style.width = window.innerWidth*0.9;
-    canvas.style.height = window.innerHeight*0.8;
-    socket.emit('canvas-data-to-all')
+    socket.emit('resize-data');
+    
+    tempWidth = window.innerWidth*0.9;
+    canvas.width = tempWidth;
+    tempHeight = tempWidth*0.5;
+    canvas.height = tempHeight;
+    
+    if(resizedImage !== undefined){
+        resizedImage.onload = () => {
+            ctx.drawImage(resizedImage, 0,0, tempWidth, tempHeight);
+        }
+    }
 }
 
  function getMosuePositionOnCanvas(event) {
@@ -126,16 +137,18 @@ function resizeCanvas() {
 // })
 
 socket.on('clear-canvas', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+})
+
+socket.on('resized-data', (data) => {
+    resizedImage.src = data;
 })
 
 socket.on('canvas-data', (data) => {
-    var image = new Image()
-    var canvas = document.querySelector('#paint')
-    ctx = canvas.getContext('2d');
+    var image = new Image();
+    image.src = data;
 
     image.onload = () => {
-        ctx.drawImage(image, 0, 0)
+        ctx.drawImage(image, 0, 0, tempWidth, tempHeight)
     }
-    image.src = data
 })
