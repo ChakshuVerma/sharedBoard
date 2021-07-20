@@ -71,7 +71,6 @@ input[type="color"]::-webkit-color-swatch {
     margin-bottom: 1vh;
     margin-right: 5vw;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
@@ -110,10 +109,6 @@ canvas {
     }
     .tools > div{
         margin-bottom: 3vh;
-        width: 50vw;
-    }
-    .clear-button-container{
-        padding-left: 15%;
     }
 }
 
