@@ -15,7 +15,7 @@ const canvas = document.getElementById('paint');
 var ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth*0.9;
 var tempWidth = canvas.width;
-canvas.height = tempWidth*0.5;
+canvas.height = tempWidth*0.45;
 
                                                 /* EVENT LISTENERS
 ======================================================================================================================*/
@@ -48,6 +48,8 @@ function start(event) {
     ctx.fill();
 
     isDrawing = true;
+
+    draw(event);
 }
 
 function draw(event) {
@@ -125,16 +127,6 @@ function resizeCanvas() {
 
                                             /* WEB-SOCKETS
  ======================================================================================================================*/
-// socket.on('initial-canvas', (data) => {
-//     var image = new Image()
-//     var canvas = document.querySelector('#paint')
-//     ctx = canvas.getContext('2d');
-
-//     image.onload = () => {
-//         ctx.drawImage(image, 0, 0)
-//     }
-//     image.src = data
-// })
 
 socket.on('clear-canvas', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
