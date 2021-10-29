@@ -30,7 +30,6 @@ input[type="color"]::-webkit-color-swatch {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    /* max-height: 100vh; */
 }
 
 .app-name {
